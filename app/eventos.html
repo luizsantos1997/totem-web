@@ -1,31 +1,32 @@
-<div ng-controller="eventos">
-    <div class="evento-container" ng-repeat="evento in eventos">
-            <div class="col-sm-12 col-md-12 col-lg-12">
-                    <!--Card-->
-                    <div class="card">                        
-                        <!--Card image-->
-                        <img class="img-fluid" src="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20%282%29.jpg" alt="Card image cap">
-                        
-                        <!--Card content-->
-                        <div class="card-body card-body-custom">
-                            <h4 class="card-title">{{ evento.nome }}</h4>
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <i class="fa fa-map-marker-alt"></i>
-                                    <span class="location-event"> Ruy Barbosa </span>
-                                </div>
-                                <div class="col-sm-6 ">
-                                    <div class="float-right">
-                                        <i class="fa fa-calendar"></i> 
-                                        <span class="datetime-event"> 03/08/2018 14:00 às 18:30 </span>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                        </div>
-                        
+<div ng-controller="eventos"  class="row">
+    <div class="evento-container col-sm-12 col-md-6 col-lg-6 col-xl-6" ng-repeat="evento in eventos" >
+        <!--Card-->
+        <div class="card">                        
+            <!--Card image-->
+            <a ng-href="#!/evento/{{ evento.id }}">
+                <img class="img-fluid" src="https://mdbootstrap.com/img/Photos/Horizontal/Nature/4-col/img%20%282%29.jpg" alt="Card image cap">
+            </a>
+            <!--Card content-->
+            <div class="card-body card-body-custom">
+                <h4 class="card-title">{{ evento.nome }}</h4>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <i class="fa fa-map-marker-alt"></i>
+                        <span class="location-event"> Ruy Barbosa </span>
                     </div>
-                    <!--/.Card-->
+                    <div class="col-sm-6 ">
+                        <div class="float-right">
+                            <i class="fa fa-calendar"></i> 
+                            <span class="datetime-event"> 03/08/2018 14:00 às 18:30 </span>
+                        </div>
+                    </div>
                 </div>
+                
+            </div>
+            
+        </div>
+        <!--/.Card-->
+        
+        
     </div>
 </div>

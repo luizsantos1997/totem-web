@@ -5,9 +5,6 @@ app.config(function($routeProvider) {
         templateUrl: "eventos.html"
     })
     .when("/evento/:id", {
-        templateUrl : "red.htm"
-    })
-    .when("/blue", {
-        templateUrl : "blue.htm"
+        templateUrl : "evento.html"
     });
 });
