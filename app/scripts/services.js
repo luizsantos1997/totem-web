@@ -25,13 +25,10 @@ app.factory('InscricaoService',
 
 
             this.inscrever = function($scope) {
-                $http({
-                    data: $.param({ nome: $scope.nome
-                    }),
-                    method: 'POST',
-                    url: urlBase+"/inscrever",
-                    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-                });
+                var config = {
+                    headers:  {'Content-Type': 'application/x-www-form-urlencoded'}
+                }
+                return $http.post(urlBase+"/inscrever",$scope.dados);
             }
 
             return this;
