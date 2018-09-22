@@ -1,4 +1,3 @@
-
 app.factory('EventosService', 
     ['$http',
         function($http) {
@@ -9,10 +8,16 @@ app.factory('EventosService',
             }
 
             this.getEvento = function(id) {
-                console.log(id);
                 return $http.get(urlBase+"/evento/"+id);
             }
 
+            this.cadastrar = function($scope) {
+                return $http.post(urlBase+"/adm/evento/cadastrar",$scope.dados);
+            }
+
+            this.editar = function($scope) {
+                return $http.post(urlBase+"/adm/evento/editar",$scope.dados);
+            }
             return this;
         }
     ]
@@ -48,6 +53,18 @@ app.factory('InstituicoesService',
                return $http.get(urlBase+"/instituicoes");
             }
 
+            this.cadastrar = function($scope) {
+                return $http.post(urlBase+"/adm/instituicao/cadastrar",$scope.dados);
+             }
+
+            this.editar = function($scope) {
+                return $http.post(urlBase+"/adm/instituicao/editar",$scope.dados);
+            }
+
+            this.getInstituicao = function(id) {
+                return $http.get(urlBase+"/instituicao/"+id);
+            }
+
             return this;
         }
     ]
@@ -61,6 +78,18 @@ app.factory('CursosService',
 
             this.getCursos = function() {
                return $http.get(urlBase+"/cursos");
+            }
+
+            this.cadastrar = function($scope) {
+                return $http.post(urlBase+"/adm/curso/cadastrar",$scope.dados);
+            }
+
+            this.getCurso = function(id) {
+                return $http.get(urlBase+"/curso/"+id);
+            }
+
+            this.editar = function($scope) {
+                return $http.post(urlBase+"/adm/curso/editar",$scope.dados);
             }
 
             return this;

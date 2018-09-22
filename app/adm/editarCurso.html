@@ -1,0 +1,64 @@
+<div class="row" ng-controller="admcursoEditar">
+    
+    <article class="col-sm-12 col-lg-12 col-md-12 col-xl-12">
+
+            
+            
+            <div class="row" style="padding:10px;">
+                <div class="col-sm-12">
+                    <form class="form-horizontal" name="inscricao_form" ng-submit="submitForm()">
+                        <fieldset>
+                            
+                            <!-- Form Name -->
+                            <legend>Editar Curso</legend>
+                            <div class="alert alert-{{responseClass}} col-sm-12">
+                                {{ editResposta }}
+                            </div>
+                            
+                            <!-- Text input-->
+                            <div class="form-group">
+                                <label class="col-md-4 control-label" for="textinput">Nome</label>  
+                                <div class="col-md-12">
+                                    <input id="textinput" name="textinput" ng-model="dados.nome" type="text" placeholder="" class="form-control input-md" ng-required="true">
+                                    
+                                </div>
+                            </div>
+
+                            <!-- Text input-->
+                            <div class="form-group">
+                                <label class="col-md-4 control-label" for="textinput">Area</label>  
+                                <div class="col-md-12">
+                                    <input id="textinput" name="textinput" ng-model="dados.area" type="text" placeholder="" class="form-control input-md" ng-required="true">
+                                    
+                                </div>
+                            </div>
+                            
+                            <!-- Select Basic -->
+                            <div class="form-group">
+                                <label class="col-md-4 control-label" for="selectbasic">Faculdade</label>
+                                <div class="col-md-12">
+                                    <select id="selectbasic"  name="selectbasic" ng-model="selectedFacul" class="form-control" ng-options="instituicao.nome_faculdade for instituicao in instituicoes track by instituicao.id">
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Button (Double) -->
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <button ng-click="Submit" id="" name="button1id" class="btn btn-primary btnSalvar">Editar</button>
+                                </div>
+                            </div>
+                            
+                        </fieldset>
+                    </form>
+                    
+                    
+                </div>
+                
+            </div>
+            
+        </div>
+    </article>
+    
+    
+</div>

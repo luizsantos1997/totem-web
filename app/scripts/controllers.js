@@ -7,7 +7,14 @@ app.controller("eventos", function ($scope, EventosService) {
             console.log("DEU RUIM");
         } else {
             retorno = retorno.data;
-            $scope.eventos = retorno;
+            $scope.eventos = retorno.map(function(item){
+               return { nome: item.nome,
+                        inicio: new Date(item.inicio).toISOString(),
+                        fim: new Date(item.fim).toISOString(),
+                        faculdade: item.faculdade,
+                        id: item.id
+                }
+            });
         }
     });
 });
@@ -20,8 +27,13 @@ app.controller("eventoInterna", function($scope,$route, EventosService){
         if("error" in retorno.data){
             console.log(retorno.error);
         } else {
-            retorno = retorno.data;
-            $scope.evento = retorno[0];
+            retorno = retorno.data[0];
+            $scope.evento = {
+                nome: retorno.nome,
+                inicio: new Date(retorno.inicio).toISOString(),
+                fim: new Date(retorno.fim).toISOString()
+            };
+
         }
 
     });
@@ -93,4 +105,340 @@ app.controller("inscricao", function($scope,$route,InscricaoService,Instituicoes
             }
         })
     }
+});
+
+app.controller("admeventoCadastro", function($scope,$route, EventosService, InstituicoesService ){
+    var retorno;
+    $scope.responseClass = '';
+    $scope.selectedFacul = '';
+    $scope.cadastroResposta = '';
+    
+
+    $scope.dados = {
+        nome: '',
+        faculdade: '',
+        inicio: '',
+        fim: ''
+    };
+
+    $scope.instituicoes = InstituicoesService.getInstituicoes().
+    then(retorno => {
+        if("error" in retorno.data){
+
+        } else {
+            $scope.instituicoes = retorno.data;
+        }
+    });
+
+    $scope.submitForm = function() {
+        if ($scope.selectedFacul.id == undefined){
+           $scope.responseClass = "danger";
+           $scope.cadastroResposta = "Por favor informe a faculdade";
+           return;
+       }
+       $scope.dados.faculdade = $scope.selectedFacul.id;
+
+       EventosService.cadastrar($scope).
+       then(retorno => {
+           if(retorno.data.error == true) {
+               $scope.responseClass = "danger";
+               $scope.cadastroResposta = retorno.data.message;
+           } else {
+               $scope.responseClass = "success";
+               $scope.cadastroResposta = retorno.data.message;
+               $scope.dados = {};
+               $scope.selectedFacul = {};
+               $scope.inscricao_form.$setPristine();
+               $scope.inscricao_form.$setValidity();
+               $scope.inscricao_form.$setUntouched();
+           }
+       })
+   }
+
+   
+});
+
+app.controller("admeventoEditar", function($scope,$route, EventosService, InstituicoesService ){
+    var retorno;
+    var evento_id = $route.current.params.id;
+    $scope.responseClass = '';
+    $scope.selectedFacul = '';
+    $scope.editResposta = '';
+    $scope.instituicoes;
+    
+    $scope.dados = {
+        nome: '',
+        faculdade: '',
+        inicio: '',
+        fim: '',
+        id: evento_id
+    };
+
+    EventosService.getEvento(evento_id)
+    .then(retorno => {
+        if("error" in retorno.data){
+
+        } else {
+            let data = retorno.data[0];
+            $scope.dados = {
+                nome: data.nome,
+                faculdade: data.faculdade.toString(),
+                inicio: new Date(data.inicio),
+                fim: new Date(data.fim),
+                id: evento_id
+            };
+
+            InstituicoesService.getInstituicoes().
+            then(retorno => {
+                if("error" in retorno.data){
+        
+                } else {
+                    $scope.instituicoes = retorno.data;
+                }
+
+                $scope.selectedFacul = $scope.instituicoes[$scope.instituicoes.findIndex(function(item){
+                    return item.id == $scope.dados.faculdade.toString();
+                })];
+
+            });
+            
+            
+
+
+            
+        }
+
+    })
+
+    
+
+    $scope.submitForm = function() {
+        if ($scope.selectedFacul.id == undefined){
+           $scope.responseClass = "danger";
+           $scope.editResposta = "Por favor informe a faculdade";
+           return;
+       }
+       $scope.dados.faculdade = $scope.selectedFacul.id;
+       
+       EventosService.editar($scope).
+       then(retorno => {
+           if(retorno.data.error == true) {
+               $scope.responseClass = "danger";
+               $scope.editResposta = retorno.data.message;
+           } else {
+               $scope.responseClass = "success";
+               $scope.editResposta = retorno.data.message;
+               $scope.dados = {};
+               $scope.selectedFacul = {};
+               $scope.inscricao_form.$setPristine();
+               $scope.inscricao_form.$setValidity();
+               $scope.inscricao_form.$setUntouched();
+           }
+       })
+   }
+
+   
+});
+
+
+app.controller("admcursoCadastrar", function($scope,$route, CursosService, InstituicoesService ){
+    var retorno;
+    $scope.responseClass = '';
+    $scope.selectedFacul = '';
+    $scope.cadastroResposta = '';
+    
+
+    $scope.dados = {
+        nome: '',
+        faculdade: '',
+        area: ''
+    };
+
+    $scope.instituicoes = InstituicoesService.getInstituicoes().
+    then(retorno => {
+        if("error" in retorno.data){
+
+        } else {
+            $scope.instituicoes = retorno.data;
+        }
+    });
+
+    $scope.submitForm = function() {
+        if ($scope.selectedFacul.id == undefined){
+           $scope.responseClass = "danger";
+           $scope.cadastroResposta = "Por favor informe a faculdade";
+           return;
+       }
+       $scope.dados.faculdade = $scope.selectedFacul.id;
+
+       CursosService.cadastrar($scope).
+       then(retorno => {
+           if(retorno.data.error == true) {
+               $scope.responseClass = "danger";
+               $scope.cadastroResposta = retorno.data.message;
+           } else {
+               $scope.responseClass = "success";
+               $scope.cadastroResposta = retorno.data.message;
+               $scope.dados = {};
+               $scope.selectedFacul = {};
+               $scope.inscricao_form.$setPristine();
+               $scope.inscricao_form.$setValidity();
+               $scope.inscricao_form.$setUntouched();
+           }
+       })
+   }
+
+   
+});
+
+app.controller("admcursoEditar", function($scope,$route, CursosService, InstituicoesService ){
+    var retorno;
+    var cursoId = $route.current.params.id;
+    $scope.responseClass = '';
+    $scope.selectedFacul = '';
+    $scope.editResposta = '';
+    $scope.instituicoes;
+    
+    $scope.dados = {
+        nome: '',
+        faculdade: '',
+        id: cursoId
+    };
+
+    CursosService.getCurso(cursoId)
+    .then(retorno => {
+        if("error" in retorno.data){
+
+        } else {
+            let data = retorno.data;
+            $scope.dados = {
+                nome: data.nome,
+                faculdade: data.faculdade,
+                area: data.area,
+                id: cursoId
+            };
+
+            InstituicoesService.getInstituicoes().
+            then(retorno => {
+                if("error" in retorno.data){
+        
+                } else {
+                    $scope.instituicoes = retorno.data;
+                }
+
+                $scope.selectedFacul = $scope.instituicoes[$scope.instituicoes.findIndex(function(item){
+                    return item.id == $scope.dados.faculdade.toString();
+                })];
+
+            });
+            
+            
+
+
+            
+        }
+
+    })
+
+    $scope.submitForm = function() {
+        if ($scope.selectedFacul.id == undefined){
+           $scope.responseClass = "danger";
+           $scope.editResposta = "Por favor informe a faculdade";
+           return;
+       }
+       $scope.dados.faculdade = $scope.selectedFacul.id;
+       
+       CursosService.editar($scope).
+       then(retorno => {
+           if(retorno.data.error == true) {
+               $scope.responseClass = "danger";
+               $scope.editResposta = retorno.data.message;
+           } else {
+               $scope.responseClass = "success";
+               $scope.editResposta = retorno.data.message;
+               $scope.dados = {};
+               $scope.selectedFacul = {};
+               $scope.inscricao_form.$setPristine();
+               $scope.inscricao_form.$setValidity();
+               $scope.inscricao_form.$setUntouched();
+           }
+       })
+   }
+
+   
+});
+
+app.controller("adminstituicaoCadastrar", function($scope,$route, InstituicoesService ){
+    var retorno;
+    $scope.responseClass = '';
+    $scope.cadastroResposta = '';
+
+    $scope.dados = {
+        endereco: '',
+        nome_faculdade: ''
+    };
+
+    $scope.submitForm = function() {
+       InstituicoesService.cadastrar($scope).
+       then(retorno => {
+           if(retorno.data.error == true) {
+               $scope.responseClass = "danger";
+               $scope.cadastroResposta = retorno.data.message;
+           } else {
+               $scope.responseClass = "success";
+               $scope.cadastroResposta = retorno.data.message;
+               $scope.dados = {};
+               $scope.selectedFacul = {};
+               $scope.inscricao_form.$setPristine();
+               $scope.inscricao_form.$setValidity();
+               $scope.inscricao_form.$setUntouched();
+           }
+       })
+   }
+
+   
+});
+
+
+app.controller("adminstituicaoEditar", function($scope,$route, InstituicoesService ){
+    var retorno;
+    var instituicaoId = $route.current.params.id;
+    $scope.responseClass = '';
+    $scope.editResposta = '';
+    
+    $scope.dados = {
+        endereco: '',
+        nome_faculdade: '',
+        id: instituicaoId
+    };
+
+    InstituicoesService.getInstituicao(instituicaoId)
+    .then(retorno => {
+        if("error" in retorno.data){
+
+        } else {
+            let data = retorno.data;
+            $scope.dados = data;
+        }
+    });
+
+    $scope.submitForm = function() {
+       InstituicoesService.editar($scope).
+       then(retorno => {
+           if(retorno.data.error == true) {
+               $scope.responseClass = "danger";
+               $scope.editResposta = retorno.data.message;
+           } else {
+               $scope.responseClass = "success";
+               $scope.editResposta = retorno.data.message;
+               $scope.dados = {};
+               $scope.selectedFacul = {};
+               $scope.inscricao_form.$setPristine();
+               $scope.inscricao_form.$setValidity();
+               $scope.inscricao_form.$setUntouched();
+           }
+       })
+   }
+
+   
 });
