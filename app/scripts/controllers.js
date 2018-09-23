@@ -45,6 +45,8 @@ app.controller("inscricao", function($scope,$route,InscricaoService,Instituicoes
     $scope.responseClass = '';
     $scope.selectedFacul = '';
     $scope.selectedCurso = '';
+    $scope.isStudent = false;
+
     $scope.dados = {
         nome: '',
         id_faculdade: '',
@@ -52,8 +54,22 @@ app.controller("inscricao", function($scope,$route,InscricaoService,Instituicoes
         telefone: '',
         matricula: '',
         id_curso: '',
+        cpf: '',
         id_evento: evento_id
     };
+
+    function resetDados(){
+        $scope.dados = {
+            nome: '',
+            id_faculdade: '',
+            email: '',
+            telefone: '',
+            matricula: '',
+            id_curso: '',
+            cpf: '',
+            id_evento: evento_id
+        };
+    }
     
     $scope.cursos = CursosService.getCursos().
     then(retorno => {
@@ -76,18 +92,19 @@ app.controller("inscricao", function($scope,$route,InscricaoService,Instituicoes
 
 
     $scope.submitForm = function() {
-         if ($scope.selectedFacul.id == undefined){
-            $scope.responseClass = "danger";
-            $scope.inscricaoResposta = "Por favor informe a faculdade";
-            return;
-        } else if($scope.selectedCurso.id == undefined) {
-            $scope.responseClass = "danger";
-            $scope.inscricaoResposta = "Por favor informe o curso";
-            return;
+        if ($scope.isStudent) {
+            if ($scope.selectedFacul.id == undefined){
+                $scope.responseClass = "danger";
+                $scope.inscricaoResposta = "Por favor informe a faculdade";
+                return;
+            } else if($scope.selectedCurso.id == undefined) {
+                $scope.responseClass = "danger";
+                $scope.inscricaoResposta = "Por favor informe o curso";
+                return;
+            }
+            $scope.dados.id_curso = $scope.selectedCurso.id;
+            $scope.dados.id_faculdade = $scope.selectedFacul.id;
         }
-
-        $scope.dados.id_curso = $scope.selectedCurso.id;
-        $scope.dados.id_faculdade = $scope.selectedFacul.id;
         InscricaoService.inscrever($scope).
         then(retorno => {
             if(retorno.data.error == true) {
@@ -96,12 +113,14 @@ app.controller("inscricao", function($scope,$route,InscricaoService,Instituicoes
             } else {
                 $scope.responseClass = "success";
                 $scope.inscricaoResposta = retorno.data.message;
-                $scope.dados = {};
+                resetDados()
                 $scope.selectedFacul = {};
                 $scope.selectedCurso = {};
                 $scope.inscricao_form.$setPristine();
                 $scope.inscricao_form.$setValidity();
                 $scope.inscricao_form.$setUntouched();
+                $scope.isStudent = false;
+                
             }
         })
     }
