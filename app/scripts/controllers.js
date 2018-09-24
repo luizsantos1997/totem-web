@@ -450,7 +450,11 @@ app.controller("adminstituicaoEditar", function($scope,$route, InstituicoesServi
            } else {
                $scope.responseClass = "success";
                $scope.editResposta = retorno.data.message;
-               $scope.dados = {};
+               $scope.dados = {
+                    endereco: '',
+                    nome_faculdade: '',
+                    id: instituicaoId
+               };
                $scope.selectedFacul = {};
                $scope.inscricao_form.$setPristine();
                $scope.inscricao_form.$setValidity();
@@ -461,3 +465,96 @@ app.controller("adminstituicaoEditar", function($scope,$route, InstituicoesServi
 
    
 });
+
+
+app.controller("credenciamento", function($scope,$route, EventosService, CredenciamentoService){
+
+    $scope.selectedEvento = '';
+    $scope.responseClass = '';
+    $scope.credenciamentoResponse = '';
+    $scope.actionOption = '';
+    $scope.dados = {
+        cpf: '',
+        id_evento: ''
+    };
+
+    EventosService.getEventos()
+    .then(retorno => {
+        if("error" in retorno.data) {
+        } else {
+            retorno = retorno.data;
+            $scope.eventos = retorno.map(function(item){
+               return { nome: item.nome,
+                        id: item.id
+                }
+            });
+        }
+    });
+
+    $scope.submitForm = function() {
+        if ($scope.actionOption == 'checkin') {
+            checkin();
+        } else if ($scope.actionOption == 'checkout') {
+            checkout();
+        } else {
+            $scope.responseClass = 'danger';
+            $scope.credenciamentoResponse = "Selecione checkin ou checkout.";
+        }
+    }
+
+    function checkout() {
+        if ($scope.selectedEvento.id == undefined){
+            $scope.responseClass = "danger";
+            $scope.credenciamentoResponse = "Por favor informe o evento";
+            return;
+        }
+        $scope.dados.id_evento = $scope.selectedEvento.id;
+        
+        CredenciamentoService.checkout($scope)
+        .then(retorno => {
+            if(retorno.data.error == true) {
+                $scope.responseClass = "danger";
+                $scope.credenciamentoResponse = retorno.data.message;
+            } else {
+                $scope.responseClass = "success";
+                $scope.credenciamentoResponse = retorno.data.message;
+                $scope.dados = {
+                    cpf: '',
+                    id_evento: ''
+                };
+                $scope.selectedEvento = {};
+                $scope.inscricao_form.$setPristine();
+                $scope.inscricao_form.$setValidity();
+                $scope.inscricao_form.$setUntouched();
+            }
+        });
+    }
+
+    function checkin(){
+        if ($scope.selectedEvento.id == undefined){
+            $scope.responseClass = "danger";
+            $scope.credenciamentoResponse = "Por favor informe o evento";
+            return;
+        }
+        $scope.dados.id_evento = $scope.selectedEvento.id;
+        
+        CredenciamentoService.checkin($scope)
+        .then(retorno => {
+            if(retorno.data.error == true) {
+                $scope.responseClass = "danger";
+                $scope.credenciamentoResponse = retorno.data.message;
+            } else {
+                $scope.responseClass = "success";
+                $scope.credenciamentoResponse = retorno.data.message;
+                $scope.dados = {
+                    cpf: '',
+                    id_evento: ''
+                };
+                $scope.selectedEvento = {};
+                $scope.inscricao_form.$setPristine();
+                $scope.inscricao_form.$setValidity();
+                $scope.inscricao_form.$setUntouched();
+            }
+        });
+    }
+})

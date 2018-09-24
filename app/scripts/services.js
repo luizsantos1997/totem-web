@@ -96,3 +96,20 @@ app.factory('CursosService',
         }
     ]
 );
+
+app.factory('CredenciamentoService', 
+    ['$http',
+        function($http) {
+            var urlBase = "http://localhost/totem-api";
+
+            this.checkin = function($scope) {
+                return $http.post(urlBase+"/checkin",$scope.dados);
+            }
+
+            this.checkout = function($scope) {
+                return $http.post(urlBase+"/checkout",$scope.dados);
+            }
+            return this;
+        }
+    ]
+);
