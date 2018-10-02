@@ -1,7 +1,7 @@
 app.factory('EventosService', 
     ['$http',
         function($http) {
-            var urlBase = "http://localhost/totem-api";
+            var urlBase = "http://www.nexusjr.com/totem-api";
 
             this.getEventos = function() {
                return $http.get(urlBase+"/eventos");
@@ -26,7 +26,7 @@ app.factory('EventosService',
 app.factory('InscricaoService',
     ['$http',
         function($http){
-            var urlBase = "http://localhost/totem-api";
+            var urlBase = "http://www.nexusjr.com/totem-api";
 
 
             this.inscrever = function($scope) {
@@ -47,7 +47,7 @@ app.factory('InscricaoService',
 app.factory('InstituicoesService', 
     ['$http',
         function($http) {
-            var urlBase = "http://localhost/totem-api";
+            var urlBase = "http://www.nexusjr.com/totem-api";
 
             this.getInstituicoes = function() {
                return $http.get(urlBase+"/instituicoes");
@@ -74,7 +74,7 @@ app.factory('InstituicoesService',
 app.factory('CursosService', 
     ['$http',
         function($http) {
-            var urlBase = "http://localhost/totem-api";
+            var urlBase = "http://www.nexusjr.com/totem-api";
 
             this.getCursos = function() {
                return $http.get(urlBase+"/cursos");
@@ -100,7 +100,7 @@ app.factory('CursosService',
 app.factory('CredenciamentoService', 
     ['$http',
         function($http) {
-            var urlBase = "http://localhost/totem-api";
+            var urlBase = "http://www.nexusjr.com/totem-api";
 
             this.checkin = function($scope) {
                 return $http.post(urlBase+"/checkin",$scope.dados);
